@@ -9,7 +9,9 @@ import {useRecoilState} from 'recoil'
 const queryClient = new QueryClient();
 
 function App() {
-  const [placeName, setPlaceName] = useRecoilState(placeNameAtom);
+  const [placeName] = useRecoilState(placeNameAtom);
+
+  let namePlaceholder = placeName.length > 0 ? ' ' + placeName : '...'
 
   return (
     <div className="App">
@@ -23,7 +25,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <ZipInput/>
         </QueryClientProvider>
-        <h2>{placeName}</h2>
+        <h2>Weather in{namePlaceholder}</h2>
         <Feed/>
       </Box>
     </div>
