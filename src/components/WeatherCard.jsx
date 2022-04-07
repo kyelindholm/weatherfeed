@@ -1,4 +1,5 @@
 import { Grid, Card, CardContent, Typography, CardMedia} from "@mui/material";
+import moment from 'moment';
 import heavyraincon from '../weather_images/heavyraincon.png';
 import lightraincon from '../weather_images/lightraincon.png';
 import snowcon from '../weather_images/snowcon.png';
@@ -8,6 +9,8 @@ import cloudycon from '../weather_images/cloudycon.png';
 
 
 const WeatherCard = ({weather}) => {
+  const weatherDate = moment().format(weather.Date.slice(0, weather.Date.indexOf('T')));
+
 
   let currentWeatherIcon = '';
   if (weather.Day.HasPrecipitation === false) {
@@ -47,6 +50,9 @@ const WeatherCard = ({weather}) => {
                     Low: {weather.Temperature.Minimum.Value}°
                   </Typography>
                 </CardContent>
+                <Typography align='center'>
+                    {weatherDate}
+                  </Typography>
               </Card>
             </Grid>
   )
