@@ -1,24 +1,28 @@
-import { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { useRecoilState } from 'recoil';
 import { dailyForecast as dailyForecastAtom, placeName as placeNameAtom, zipCode as zipCodeAtom } from '../atoms';
 import { fetchWeather } from '../routes';
+import { useQuery } from 'react-query';
 
 const ZipInput = () => {
   const [dailyForecast, setDailyForecast] = useRecoilState(dailyForecastAtom);
   const [placeName, setPlaceName] = useRecoilState(placeNameAtom);
   const [zipCode, setZipcode] = useRecoilState(zipCodeAtom)
 
-  useEffect(() => {
-    const handleChangeZipcode = async(zipCode) => {
-      const newForecast = await fetchWeather(zipCode);
-      setDailyForecast(newForecast.data.DailyForecasts);
-      setPlaceName(newForecast.name);
-    }
-    if (zipCode.length === 5) {
-      handleChangeZipcode(zipCode);
-    }
-  }, [zipCode, setDailyForecast, setPlaceName])
+  const updateState = () => {
+    setPlaceName(data.name);
+    setDailyForecast(data.data.DailyForecasts);
+  }
+
+  const isProperZipcodeLength = zipCode.length === 5;
+  const {data, error} = useQuery(['fetchWeather', zipCode], fetchWeather, {enabled: isProperZipcodeLength}, {retry: false}, {fetchPolicy: 'cache-first'});
+  if (data) {
+    updateState();
+  }
+
+  if (error) {
+    return (<h1>Error: {error}</h1>)
+  }
 
   return (
     <div className="zipInput">
